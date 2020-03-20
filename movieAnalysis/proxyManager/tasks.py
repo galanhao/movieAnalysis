@@ -2,15 +2,13 @@ import sys
 import os
 from scrapy import cmdline
 import time
-from movieAnalysis.settings import BASE_DIR
-SCRAPY_DIR = os.path.join(BASE_DIR, "spiders\\proxySpider\\proxySpider")
-
+from movieAnalysis.settings import  PROXY_SPIDER_DIR
 
 from celery import shared_task
 
 @shared_task
 def task_7yip():
-    os.chdir(SCRAPY_DIR)
+    os.chdir(PROXY_SPIDER_DIR)
     cmdline.execute('scrapy crawl genericSpider -a cn=kuaidaili -a ei=15'.split())
 
 @shared_task
@@ -21,11 +19,13 @@ def addd(s):
 
 @shared_task
 def task_verifyIP(log_file):
-    os.chdir(SCRAPY_DIR)
+    os.chdir(PROXY_SPIDER_DIR)
     cmdline.execute('scrapy crawl verify -s LOG_FILE={}'.format(log_file).split())
 
 @shared_task
 def task_runSpider(spider_name, log_file, param):
-    os.chdir(SCRAPY_DIR)
-    cmdline.execute('scrapy crawl genericSpider -a cn={}  -s LOG_FILE={} {}'.format(spider_name, log_file, param).split())
-
+    os.chdir(PROXY_SPIDER_DIR)
+    cmd = 'scrapy crawl genericSpider -a cn={}  -s LOG_FILE={} {}'.format(spider_name, log_file, param)
+    print(cmd)
+    # cmdline.execute(cmd.split())
+    os.system(cmd)

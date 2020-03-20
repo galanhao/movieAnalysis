@@ -14,6 +14,10 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PROXY_SPIDER_DIR = os.path.join(BASE_DIR, "spiders\\proxySpider\\proxySpider")
+
+
+PROXY_SPIDER_LOG_DIR = os.path.join(BASE_DIR, "spiders\\proxySpider\\logs")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/

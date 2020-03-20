@@ -34,7 +34,7 @@ class VerifySpider(scrapy.Spider):
         # proxys = Proxy.objects.values("ip", "port").all()[:60]
         # proxys = []
         for proxy in proxys:
-            print(proxy)
+            self.logger.info(proxy)
 
 
 
@@ -97,9 +97,9 @@ class VerifySpider(scrapy.Spider):
         responseTest = response.meta.get("responseTest", responseTest_default)
         ip = response.meta.get("ip", None)
         port = response.meta.get("port", None)
-        print(ip, port)
+        self.logger.info(ip, port)
         result, speed = responseTest(response)
-        print(result, speed)
+        self.logger.info(result, speed)
         item = ProxyItem()
         if result:
             item["flag"] = "verifyHTTPS"
@@ -129,7 +129,7 @@ class VerifySpider(scrapy.Spider):
             protocol = "https"
         if test_demo == None or protocol == None:
             return None
-        print("开始验证匿名性", "proxy->{}://{}:{}".format(protocol, item["ip"], item["port"]), test_demo["url"])
+        self.logger.info("开始验证匿名性", "proxy->{}://{}:{}".format(protocol, item["ip"], item["port"]), test_demo["url"])
         return scrapy.Request(url=test_demo["url"], meta={
             "flag": "ANONYMITY",
             "ip": item["ip"],
@@ -146,11 +146,11 @@ class VerifySpider(scrapy.Spider):
         ip = item["ip"]
         port = item["port"]
         test_demo = random.choice(AREA_TEST_LIST)
-        print("test_demo, protocol")
-        print(test_demo, protocol)
-        print(test_demo == None , protocol == None)
+        self.logger.info("test_demo, protocol")
+        self.logger.info(test_demo, protocol)
+        self.logger.info(test_demo == None , protocol == None)
         if test_demo == None and protocol == None:
-            print("进入了")
+            self.logger.info("进入了")
             return None
         test_url = test_demo["url"]
         if test_demo["useIP"]:
@@ -168,15 +168,15 @@ class VerifySpider(scrapy.Spider):
 
     @verifyResponse
     def getANONYMITY(self, response):
-        print("匿名性测试回执：")
-        print(response.status)
-        print(response.body)
+        self.logger.info("匿名性测试回执：")
+        self.logger.info(response.status)
+        self.logger.info(response.body)
         ip = response.meta["ip"]
         port = response.meta["port"]
         protocol = response.meta.get("protocol", "http")
         getAnonymity = response.meta.get("getAnonymity", getProtocol_default)
         result, anonymity, speed = getAnonymity(response)
-        print(result, anonymity, speed)
+        self.logger.info(result, anonymity, speed)
         item = ProxyItem()
         if result:
             item["flag"] = "ANONYMITY"
@@ -191,22 +191,22 @@ class VerifySpider(scrapy.Spider):
             item["anonymity"] = 0
         yield verifyItem(item)
         if result:
-            print("开始测试地域", protocol)
+            self.logger.info("开始测试地域", protocol)
             request = self.startAreaTest(item, protocol)
-            print(request)
+            self.logger.info(request)
             yield request
 
 
     @verifyResponse
     def getAREA(self, response):
-        print("地域测试回执：")
-        print(response)
-        print(response.meta)
+        self.logger.info("地域测试回执：")
+        self.logger.info(response)
+        self.logger.info(response.meta)
         ip = response.meta["ip"]
         port = response.meta["port"]
         getArea = response.meta.get("getArea", getArea_default)
         area = getArea(response)
-        print("get area", area)
+        self.logger.info("get area", area)
         areaItem = ProxyItem()
         areaItem["ip"] = ip
         areaItem["port"] = port

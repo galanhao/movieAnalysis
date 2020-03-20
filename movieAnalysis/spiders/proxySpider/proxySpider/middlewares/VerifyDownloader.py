@@ -38,7 +38,7 @@ class Middleware(object):
     def process_exception(self, request, exception, spider):
         if isinstance(spider, VerifySpider) \
                 and  isinstance(exception, self.EXCEPTIONS_TO_IGNORED):
-            print(request.meta["ip"], request.meta["port"])
+            # print(request.meta["ip"], request.meta["port"])
             # print("错误信息 ",exception)
             if request.meta["flag"].lower() == "area":
                 Proxy.objects.filter(ip=request.meta["ip"], port=request.meta["port"]).update(**{request.meta["flag"].lower(): None})

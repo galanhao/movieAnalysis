@@ -1,11 +1,15 @@
 import datetime
+import os
 import random
 import time
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 
 # Create your views here.
+from django.views.decorators.csrf import csrf_exempt
+
 from DB.mongdbCli import MongoDBCli
+from movieAnalysis.settings import PROXY_SPIDER_LOG_DIR
 from proxyManager.tasks import task_7yip, addd, task_verifyIP, task_runSpider
 
 
@@ -48,21 +52,31 @@ def getRandomLogFileName(name=""):
     time_str = time.strftime("%Y%m%d_%H%M%S")
     random_str = "".join([str(random.randint(0, 9)) for x in range(6)])
     ret = time_str+"_"+name+"_"+random_str+".log"
-    with open(ret, 'w', encoding="utf-8")as fp:
-        pass
+    # with open(ret, 'w', encoding="utf-8")as fp:
+    #     pass
     return ret
 
-
+@csrf_exempt
 def runSpider(request):
     spider_name = request.POST.get("spiderName", None)
+
     if spider_name == None:
         return HttpResponse("错误的请求")
     db = MongoDBCli()
-    spider_config = db.getOneSpiderConfigFromSpiderName(spider_name)
-    if spider_name == None:
+    spider_config = db.getOneSpiderFromSpiderName(spider_name)
+    if spider_config == None:
         return HttpResponse("没有这个爬虫")
-    result = task_runSpider.delay()
+    result = "a"
+    result = task_runSpider.delay(
+        spider_config["config"]["name"],
+        os.path.join(PROXY_SPIDER_LOG_DIR, getRandomLogFileName(spider_config["config"]["name"])),
+        "-a si={} -a ei=2".format(
+            spider_config["startIndex"],
+            spider_config["endIndex"],
+        )
+    )
     return HttpResponse(result)
+    # return JsonResponse(spider_config)
 
 if __name__ == "__main__":
     print(getRandomLogFileName("kuaidaiassssssaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaasssssssssli"))

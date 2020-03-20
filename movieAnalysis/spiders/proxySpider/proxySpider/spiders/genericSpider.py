@@ -28,13 +28,15 @@ class GenericSpider(scrapy.Spider):
             self.start_urls = [url_format.format(x) for x in range(start_index, end_index)]
             self.INFO = SIL[SNL.index(child_name)]
             super().__init__(name=self.name+""+child_name, **kwargs)
-            print(self.start_urls)
+            # print(self.start_urls)
+            self.logger.info(self.start_urls)
             self.download_delay = 3
         else:
-            print("没有爬虫： ", child_name)
+            # print("没有爬虫： ", child_name)
+            self.logger.info("没有爬虫： ", child_name)
 
     def parse(self, response):
-        print(response)
+        # print(response)
         # print(response.body)
         oneLines = []
         for oneLine in self.INFO["oneLine"]:

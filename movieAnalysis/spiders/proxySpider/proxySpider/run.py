@@ -1,11 +1,14 @@
 import sys
+
+from proxySpider.spiders.verify import VerifySpider
+
 sys.path.append('C:\\Users\\haowenhao\\Desktop\\biyesheji\\BSv4\\movieAnalysis')
 import django
 import os
 os.environ['DJANGO_SETTINGS_MODULE'] = 'movieAnalysis.settings'
 django.setup()
-
-
+from scrapy.crawler import CrawlerProcess, CrawlerRunner
+from scrapy.utils.project import get_project_settings
 
 from django.db.models import Q
 
@@ -42,12 +45,9 @@ def clearProxy():
     print("删除完成")
 # genericSpider("7yip", 1, 1)
 # clearProxy()
-verifyIP()
+# verifyIP()
 
-
-
-
-
-
-
+# runner = CrawlerRunner(get_project_settings())
+# runner.crawl(VerifySpider())
+os.system("scrapy crawl verify")
 

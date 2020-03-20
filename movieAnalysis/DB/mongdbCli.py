@@ -28,6 +28,15 @@ class MongoDBCli:
     def getProxySpider(self):
         ret = self.settingCol.find({"_id": ProxyTaskSettingID})[0]["task"]["spiders"]
         return ret
+
+    def getOneSpiderFromSpiderName(self, spider_name):
+        spiders = self.getProxySpider()
+        ret = None
+        for spider in spiders:
+            if spider["config"]["name"] == spider_name:
+                ret = spider
+                break
+        return ret
     def getOneSpiderConfigFromSpiderName(self, spider_name):
         spiders = self.getProxySpiderConfig()
         ret = None
@@ -50,7 +59,6 @@ tmp = {
         "spiders": [
             {
                 "name": "快代理",
-                "spiderName": "kuaidaili",
                 "description":"",
                 "startIndex": 1,
                 "endIndex": 7,
@@ -78,6 +86,6 @@ tmp = {
 
 if __name__ == "__main__":
     db = MongoDBCli()
-    # db.insertOne2Setting(tmp)
+    db.insertOne2Setting(tmp)
     # print(">>", db.getProxySpiderConfig())
-    print(">>", db.getOneSpiderConfigFromSpiderName("kuaidaili1"))
+    # print(">>", db.getOneSpiderConfigFromSpiderName("kuaidaili"))
