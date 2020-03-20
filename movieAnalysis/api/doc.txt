@@ -1,0 +1,25 @@
+scrpay crawl spider_name  -s LOG_FILE=all.log
+url
+    /api/getoverview/
+class
+    GetOverviewView
+result
+    {
+        "viewer": {
+            "overview": Viewer.objects.count(),
+            "label": ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期天"],
+            "value": [23, 56, 85, 50, 20, 12, 33],
+        },
+        "movie": ...,
+        "comment": ...,
+        "category": ...,
+    }
+
+
+
+
+url
+    /api/gettoptable1/
+class
+    GetTopTable1
+result

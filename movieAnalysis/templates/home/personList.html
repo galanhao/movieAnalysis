@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block csss %}
+
+{#    <link href="{% static '/bootstrap-pager/css/bootstrap-pager.css' %}" rel="stylesheet" media="all">#}
+{% endblock %}
+
+{% block mainContent %}
+
+<div class="row m-t-30">
+
+
+        <div class="col-md-12">
+            <h3 class="title-5 m-b-35">电影列表</h3>
+            <!-- DATA TABLE-->
+            <div class="table-responsive m-b-40">
+                <table class="table table-borderless table-data3">
+                    <thead>
+                    <tr>
+                        <th>上映日期</th>
+                        <th>电影ID</th>
+                        <th>电影名</th>
+                        <th>分类</th>
+                        <th>评分</th>
+                        <th>评论数</th>
+                    </tr>
+                    </thead>
+                    <tbody id="movieList1">
+
+
+                    </tbody>
+                </table>
+            </div>
+            <!-- END DATA TABLE-->
+        </div>
+    </div>
+
+<nav aria-label="Page navigation example" id="pager1"></nav>
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static '/bootstrap-pager/bootstrapPager.js' %}"></script>
+    <script>
+        getMovieList1(1);
+        var pager = new Pager({
+            totalCount:{{ m_count }}, 		//总条数为150
+            pageSize:{{ page_size }},    			//每页显示6条内容，默认10
+            buttonSize: 6,   		//显示6个按钮，默认10
+            pageParam: 'runJs',   		//页码的参数名为'p'，默认为'page'
+            className: 'pagination justify-content-center', //分页的样式
+            prevButton: '上一页',     //上一页按钮
+            nextButton: '下一页',     //下一页按钮
+            firstButton: '首页',      //第一页按钮
+            lastButton: '末页',       //最后一页按钮
+            clickTag: 'a href="#" ',
+            useJS: true,
+            pagerName: document.getElementById("pager1"),
+        });
+        pager.run();
+
+        function runJs(num) {
+            console.log("runJs wai   " + num);
+            pager.pageIndex = num;
+            getMovieList1(num);
+            pager.run();
+        };
+    </script>
+
+{% endblock %}

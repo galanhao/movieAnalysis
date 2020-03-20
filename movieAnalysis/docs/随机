@@ -1,0 +1,44 @@
+
+ (channel, client, cmd) in self._chan_to_sock)
+TypeError: unhashable type: 'Redis'
+redis == 3.3.11
+之后把
+celery
+django-celery
+版本都一次更改至适应版本
+
+C:\Users\haowenhao\Desktop\biyesheji\BSv4\venv\Scripts\activate
+cd  C:\Users\haowenhao\Desktop\biyesheji\BSv4\movieAnalysis
+
+
+
+
+[2020-02-08 17:57:43,810: INFO/MainProcess] Received task: spiderManager.tasks.add[613f0f81-2e7d-40b4-96c2-1014c0f18478]
+[2020-02-08 17:57:43,818: ERROR/MainProcess] Task handler raised error: ValueError('not enough values to unpack (expected 3, got 0)')
+Traceback (most recent call last):
+  File "d:\anaconda3\lib\site-packages\billiard\pool.py", line 362, in workloop
+    result = (True, prepare_result(fun(*args, **kwargs)))
+  File "d:\anaconda3\lib\site-packages\celery\app\trace.py", line 546, in _fast_trace_task
+    tasks, accept, hostname = _loc
+ValueError: not enough values to unpack (expected 3, got 0)
+
+pip install eventlet
+
+celery -A <mymodule> worker -l info -P eventlet
+celery -A movieAnalysis worker -l info -P eventlet
+
+celery flower -A <mymodule> --address=127.0.0.1 --port=5555
+celery flower -A movieAnalysis --address=127.0.0.1 --port=5555
+
+@cache_page(60, cache="default")
+def func(request):
+    return HttpResponse("SA")
+
+select types, count(*) as type_count from proxymanager_proxyip group by types;
+obs = ProxyIP.objects.values("types").annotate(type_count=Count("types"))
+
+
+obs = ProxyIP.objects.values("protocol").annotate(protocol_count=Count("protocol"))
+ProxyIP.objects.values("protocol").annotate(protocol_count=Count("protocol")).order_by("protocol")
+ProxyIP.objects.values("protocol").annotate(protocol_count=Count("protocol")).order_by("-protocol")
+

@@ -1,0 +1,256 @@
+{% extends 'base.html' %}
+
+{% block mainContent %}
+    <div class="row">
+        <div class="col-xl-3">
+            <!-- USER DATA-->
+            <div class="user-data m-b-40">
+                <h3 class="title-3 m-b-30">
+                    <i class="zmdi zmdi-movie"></i>电影列表</h3>
+
+                <div class="table-responsive table-data" style="height: 890px;;">
+                    <table class="table">
+
+                        <tbody id="movieList2">
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="user-data__footer">
+                    <button class="au-btn au-btn-load">load more</button>
+                </div>
+            </div>
+            <!-- END USER DATA-->
+        </div>
+        <div class="col-xl-9">
+            <div id="myEcharts1" style="width: 800px; height: 600px;"></div>
+            <div id="myEcharts2" style="width: 800px; height: 600px;"></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $.ajaxSettings.async = false;
+        var movieList2 = document.getElementById("movieList2");
+        if (movieList2) {
+            var maxPageIndex = 1;
+            for (var pageIndex = 1; pageIndex <= maxPageIndex; pageIndex++) {
+                $.get("{%  url 'api:GetMovieList2' %}?pageIndex=" + pageIndex, function (data) {
+                    maxPageIndex = Math.ceil(data["total"] / data["size"]);
+                    console.log("pageIndex&maxPageIndex: " + pageIndex + "&" + maxPageIndex);
+                    for (var index in data["movies"]) {
+                        trNode = document.createElement("tr");
+                        var content = `
+                            <td>
+                                <label class="au-checkbox">
+                                    <input type="checkbox" name="${data["movies"][index]["movie_name"]}" value="${data["movies"][index]["id"]}">
+                                    <span class="au-checkmark"></span>
+                                </label>
+                            </td>
+                            <td>
+                                <div class="table-data__info">
+                                    <h5>${data["movies"][index]["movie_name"]}</h5>
+                                    <span>
+                                        <a href="#">电影ID: ${data["movies"][index]["movie_id"]}</a>
+                                    </span>
+                                </div>
+                            </td>
+                    `;
+                        trNode.innerHTML = content;
+                        movieList2.appendChild(trNode);
+                    }
+                })
+            }
+        }
+        var myEchart1 = echarts.init(document.getElementById('myEcharts1'));
+        var myEchart2 = echarts.init(document.getElementById('myEcharts2'));
+        var option1 = {
+            xAxis: {
+                name: "评级",
+                type: 'category',
+                boundaryGap: false,
+                data: [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0]
+            },
+            dataZoom: [
+                {
+                    id: 'dataZoomX',
+                    type: 'slider', //slider, inside
+                    xAxisIndex: [0],
+                    filterMode: 'none', // 设定为 'filter' 从而 X 的窗口变化会影响 Y 的范围。
+
+                },
+                {
+                    id: 'dataZoomY',
+                    type: 'slider',
+                    yAxisIndex: [0],
+                    filterMode: 'none',
+
+                }
+            ],
+            tooltip: {
+                trigger: "item",
+                triggerOn: "mousemove|click",
+                axisPointer: {
+                    "type": "cross"
+                },
+                formatter: function (params, ticket, callback) {
+                    console.log(params);
+                    res = "电影名: " + params["seriesName"] +
+                        "<br> 评级: " + params["name"] +
+                        "<br> 评论数: " + params["value"];
+                    return res
+                },
+                textStyle: {
+                    fontSize: 14
+                },
+                backgroundColor: "rgba(50,50,50,0.7)",
+                borderColor: "#333",
+                borderWidth: 0
+            },
+            legend: {
+                data: []
+            },
+            yAxis: {
+                name: "评级人数",
+                type: 'value'
+            },
+            series: []
+        };
+        var option2 = {
+            xAxis: {
+                name: "评级",
+                type: 'category',
+                boundaryGap: false,
+                data: [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0]
+            },
+            dataZoom: [
+                {
+                    id: 'dataZoomX',
+                    type: 'slider', //slider, inside
+                    xAxisIndex: [0],
+                    filterMode: 'none', // 设定为 'filter' 从而 X 的窗口变化会影响 Y 的范围。
+
+                },
+                {
+                    id: 'dataZoomY',
+                    type: 'slider',
+                    yAxisIndex: [0],
+                    filterMode: 'none',
+
+                }
+            ],
+            tooltip: {
+                trigger: "item",
+                triggerOn: "mousemove|click",
+                axisPointer: {
+                    "type": "cross"
+                },
+                formatter: function (params, ticket, callback) {
+                    console.log(params);
+                    res = "电影名: " + params["seriesName"] + "<br> 评级: " + params["name"] + "<br> 评级占比: " + toPercent(params["value"], params["total"]);
+                    return res
+                },
+            },
+            legend: {
+                data: []
+            },
+            yAxis: {
+                type: 'value',
+                name: "评级占比",
+            },
+            series: [],
+        };
+
+        console.log(option1);
+        myEchart1.setOption(option1);
+        myEchart2.setOption(option2);
+
+        var checkedList = [];
+        var dataCache = [];
+
+
+        $("input[type=checkbox]").click(function () {
+            console.log(this);
+            console.log(this.checked);
+            console.log(this.name);
+            console.log(this.value);
+            var name = this.name;
+            var id = this.value;
+            if (this.checked) {
+                $.get("/api/getscoredistribution1/?movie_id=" + this.value, function (data) {
+                    console.log(data);
+                    template = {
+                        name: name,
+                        id: id,
+                        data: data["value"],
+                        type: 'line',
+                        areaStyle: {}
+                    };
+                    findIndex_cache = indexOfK_V(dataCache, "id", id);
+                    if (findIndex_cache == -1) {
+                        console.log("加dataCache");
+                        console.log(template);
+                        dataCache.push(template);
+                    }
+                    findIndex_checked = indexOfV(checkedList);
+                    if (findIndex_checked == -1) {
+                        console.log("加checkedList");
+
+                        checkedList.push(name);
+                        console.log(checkedList);
+                    }
+                });
+            } else {
+                findIndex_cache = indexOfK_V(dataCache, "id", id);
+                if (findIndex_cache != -1) {
+                    delete dataCache[findIndex_cache];
+                }
+                findIndex_checked = indexOfV(checkedList, name);
+                if (findIndex_checked != -1) {
+                    delete checkedList[findIndex_checked];
+                }
+            }
+
+
+            console.log("checkedList");
+            console.log(checkedList);
+            console.log("dataCache");
+            console.log(dataCache);
+            option1["legend"] = {
+                data: checkedList,
+            };
+            option2["legend"] = {
+                data: checkedList,
+            };
+            option1["series"] = dataCache;
+            console.log(option1);
+            myEchart1.clear();
+            myEchart1.setOption(option1);
+            myEchart2.clear();
+            var cache2 = [];
+            for (var index in dataCache) {
+                var dTmp = [];
+                var sumTmp = sumOfArr(dataCache[index]["data"]);
+                console.log(sumTmp);
+                for (var c in dataCache[index]["data"]) {
+                    dTmp.push(dataCache[index]["data"][c] / sumTmp);
+                }
+                template = {
+                    name: dataCache[index]["name"],
+                    id: dataCache[index]["id"],
+                    total: sumTmp,
+                    data: dTmp,
+                    type: 'line',
+                    areaStyle: {}
+                };
+                cache2.push(template);
+            }
+            option2["series"] = cache2;
+            myEchart2.setOption(option2);
+
+        });
+
+
+    </script>
+{% endblock %}

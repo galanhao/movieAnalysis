@@ -1,0 +1,133 @@
+2020-03-18 21:43:42 [scrapy.utils.log] INFO: Scrapy 1.8.0 started (bot: proxySpider)
+2020-03-18 21:43:42 [scrapy.utils.log] INFO: Versions: lxml 4.5.0.0, libxml2 2.9.5, cssselect 1.1.0, parsel 1.5.2, w3lib 1.21.0, Twisted 19.10.0, Python 3.6.8 (tags/v3.6.8:3c6b436a57, Dec 24 2018, 00:16:47) [MSC v.1916 64 bit (AMD64)], pyOpenSSL 19.1.0 (OpenSSL 1.1.1d  10 Sep 2019), cryptography 2.8, Platform Windows-10-10.0.17763-SP0
+2020-03-18 21:43:42 [scrapy.crawler] INFO: Overridden settings: {'BOT_NAME': 'proxySpider', 'CONCURRENT_REQUESTS': 32, 'DOWNLOAD_TIMEOUT': 10, 'LOG_FILE': 's.log', 'NEWSPIDER_MODULE': 'proxySpider.spiders', 'SPIDER_MODULES': ['proxySpider.spiders']}
+2020-03-18 21:43:42 [scrapy.extensions.telnet] INFO: Telnet Password: c57fb1285d775384
+2020-03-18 21:43:42 [scrapy.middleware] INFO: Enabled extensions:
+['scrapy.extensions.corestats.CoreStats',
+ 'scrapy.extensions.telnet.TelnetConsole',
+ 'scrapy.extensions.logstats.LogStats']
+2020-03-18 21:43:42 [scrapy.middleware] INFO: Enabled downloader middlewares:
+['proxySpider.middlewares.TestDownloader.Middleware',
+ 'proxySpider.middlewares.VerifyDownloader.Middleware',
+ 'scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
+ 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
+ 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
+ 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',
+ 'proxySpider.middlewares.ProxyspiderDownloader.Middleware',
+ 'proxySpider.middlewares.AddHeaderDownloader.Middleware',
+ 'proxySpider.middlewares.AddMetaDownloader.Middleware',
+ 'scrapy.downloadermiddlewares.retry.RetryMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
+ 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
+ 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
+ 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware',
+ 'scrapy.downloadermiddlewares.stats.DownloaderStats']
+2020-03-18 21:43:42 [scrapy.middleware] INFO: Enabled spider middlewares:
+['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
+ 'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
+ 'proxySpider.middlewares.VerifySpider.Middleware',
+ 'proxySpider.middlewares.ProxyspiderSpider.Middleware',
+ 'scrapy.spidermiddlewares.referer.RefererMiddleware',
+ 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
+ 'scrapy.spidermiddlewares.depth.DepthMiddleware']
+2020-03-18 21:43:42 [scrapy.middleware] INFO: Enabled item pipelines:
+['proxySpider.pipelines.ProxyPipeline']
+2020-03-18 21:43:42 [scrapy.core.engine] INFO: Spider opened
+2020-03-18 21:43:42 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+2020-03-18 21:43:42 [verify] INFO: Spider opened: verify
+2020-03-18 21:43:42 [verify] INFO: Spider opened: verify
+2020-03-18 21:43:42 [scrapy.extensions.telnet] INFO: Telnet console listening on 127.0.0.1:6023
+2020-03-18 21:43:42 [celery.app.trace] ERROR: Task proxyManager.tasks.task_verifyIP[26d88168-a179-4db6-aa5e-a30a4282ed30] raised unexpected: ReactorNotRestartable()
+Traceback (most recent call last):
+  File "c:\users\haowenhao\desktop\biyesheji\bsv4\venv\lib\site-packages\celery\app\trace.py", line 385, in trace_task
+    R = retval = fun(*args, **kwargs)
+  File "c:\users\haowenhao\desktop\biyesheji\bsv4\venv\lib\site-packages\celery\app\trace.py", line 650, in __protected_call__
+    return self.run(*args, **kwargs)
+  File "C:\Users\haowenhao\Desktop\biyesheji\BSv4\movieAnalysis\proxyManager\tasks.py", line 25, in task_verifyIP
+    cmdline.execute('scrapy crawl verify -s LOG_FILE={}'.format(log_file).split())
+  File "c:\users\haowenhao\desktop\biyesheji\bsv4\venv\lib\site-packages\scrapy\cmdline.py", line 146, in execute
+    _run_print_help(parser, _run_command, cmd, args, opts)
+  File "c:\users\haowenhao\desktop\biyesheji\bsv4\venv\lib\site-packages\scrapy\cmdline.py", line 100, in _run_print_help
+    func(*a, **kw)
+  File "c:\users\haowenhao\desktop\biyesheji\bsv4\venv\lib\site-packages\scrapy\cmdline.py", line 154, in _run_command
+    cmd.run(args, opts)
+  File "c:\users\haowenhao\desktop\biyesheji\bsv4\venv\lib\site-packages\scrapy\commands\crawl.py", line 58, in run
+    self.crawler_process.start()
+  File "c:\users\haowenhao\desktop\biyesheji\bsv4\venv\lib\site-packages\scrapy\crawler.py", line 309, in start
+    reactor.run(installSignalHandlers=False)  # blocking call
+  File "c:\users\haowenhao\desktop\biyesheji\bsv4\venv\lib\site-packages\twisted\internet\base.py", line 1282, in run
+    self.startRunning(installSignalHandlers=installSignalHandlers)
+  File "c:\users\haowenhao\desktop\biyesheji\bsv4\venv\lib\site-packages\twisted\internet\base.py", line 1262, in startRunning
+    ReactorBase.startRunning(self)
+  File "c:\users\haowenhao\desktop\biyesheji\bsv4\venv\lib\site-packages\twisted\internet\base.py", line 765, in startRunning
+    raise error.ReactorNotRestartable()
+twisted.internet.error.ReactorNotRestartable
+2020-03-18 21:44:08 [celery.worker.strategy] INFO: Received task: proxyManager.tasks.task_verifyIP[28dd1c95-ec91-4ce2-9215-f405b3f5a679]  
+2020-03-18 21:44:08 [scrapy.utils.log] INFO: Scrapy 1.8.0 started (bot: proxySpider)
+2020-03-18 21:44:08 [scrapy.utils.log] INFO: Versions: lxml 4.5.0.0, libxml2 2.9.5, cssselect 1.1.0, parsel 1.5.2, w3lib 1.21.0, Twisted 19.10.0, Python 3.6.8 (tags/v3.6.8:3c6b436a57, Dec 24 2018, 00:16:47) [MSC v.1916 64 bit (AMD64)], pyOpenSSL 19.1.0 (OpenSSL 1.1.1d  10 Sep 2019), cryptography 2.8, Platform Windows-10-10.0.17763-SP0
+2020-03-18 21:44:08 [scrapy.crawler] INFO: Overridden settings: {'BOT_NAME': 'proxySpider', 'CONCURRENT_REQUESTS': 32, 'DOWNLOAD_TIMEOUT': 10, 'LOG_FILE': 's.log', 'NEWSPIDER_MODULE': 'proxySpider.spiders', 'SPIDER_MODULES': ['proxySpider.spiders']}
+2020-03-18 21:44:08 [scrapy.extensions.telnet] INFO: Telnet Password: 793a31c9b60fda05
+2020-03-18 21:44:08 [scrapy.middleware] INFO: Enabled extensions:
+['scrapy.extensions.corestats.CoreStats',
+ 'scrapy.extensions.telnet.TelnetConsole',
+ 'scrapy.extensions.logstats.LogStats']
+2020-03-18 21:44:08 [scrapy.middleware] INFO: Enabled downloader middlewares:
+['proxySpider.middlewares.TestDownloader.Middleware',
+ 'proxySpider.middlewares.VerifyDownloader.Middleware',
+ 'scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
+ 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
+ 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
+ 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',
+ 'proxySpider.middlewares.ProxyspiderDownloader.Middleware',
+ 'proxySpider.middlewares.AddHeaderDownloader.Middleware',
+ 'proxySpider.middlewares.AddMetaDownloader.Middleware',
+ 'scrapy.downloadermiddlewares.retry.RetryMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
+ 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
+ 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
+ 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware',
+ 'scrapy.downloadermiddlewares.stats.DownloaderStats']
+2020-03-18 21:44:08 [scrapy.middleware] INFO: Enabled spider middlewares:
+['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
+ 'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
+ 'proxySpider.middlewares.VerifySpider.Middleware',
+ 'proxySpider.middlewares.ProxyspiderSpider.Middleware',
+ 'scrapy.spidermiddlewares.referer.RefererMiddleware',
+ 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
+ 'scrapy.spidermiddlewares.depth.DepthMiddleware']
+2020-03-18 21:44:08 [scrapy.middleware] INFO: Enabled item pipelines:
+['proxySpider.pipelines.ProxyPipeline']
+2020-03-18 21:44:08 [scrapy.core.engine] INFO: Spider opened
+2020-03-18 21:44:08 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+2020-03-18 21:44:08 [verify] INFO: Spider opened: verify
+2020-03-18 21:44:08 [verify] INFO: Spider opened: verify
+2020-03-18 21:44:08 [scrapy.extensions.telnet] INFO: Telnet console listening on 127.0.0.1:6024
+2020-03-18 21:44:08 [celery.app.trace] ERROR: Task proxyManager.tasks.task_verifyIP[28dd1c95-ec91-4ce2-9215-f405b3f5a679] raised unexpected: ReactorNotRestartable()
+Traceback (most recent call last):
+  File "c:\users\haowenhao\desktop\biyesheji\bsv4\venv\lib\site-packages\celery\app\trace.py", line 385, in trace_task
+    R = retval = fun(*args, **kwargs)
+  File "c:\users\haowenhao\desktop\biyesheji\bsv4\venv\lib\site-packages\celery\app\trace.py", line 650, in __protected_call__
+    return self.run(*args, **kwargs)
+  File "C:\Users\haowenhao\Desktop\biyesheji\BSv4\movieAnalysis\proxyManager\tasks.py", line 25, in task_verifyIP
+    cmdline.execute('scrapy crawl verify -s LOG_FILE={}'.format(log_file).split())
+  File "c:\users\haowenhao\desktop\biyesheji\bsv4\venv\lib\site-packages\scrapy\cmdline.py", line 146, in execute
+    _run_print_help(parser, _run_command, cmd, args, opts)
+  File "c:\users\haowenhao\desktop\biyesheji\bsv4\venv\lib\site-packages\scrapy\cmdline.py", line 100, in _run_print_help
+    func(*a, **kw)
+  File "c:\users\haowenhao\desktop\biyesheji\bsv4\venv\lib\site-packages\scrapy\cmdline.py", line 154, in _run_command
+    cmd.run(args, opts)
+  File "c:\users\haowenhao\desktop\biyesheji\bsv4\venv\lib\site-packages\scrapy\commands\crawl.py", line 58, in run
+    self.crawler_process.start()
+  File "c:\users\haowenhao\desktop\biyesheji\bsv4\venv\lib\site-packages\scrapy\crawler.py", line 309, in start
+    reactor.run(installSignalHandlers=False)  # blocking call
+  File "c:\users\haowenhao\desktop\biyesheji\bsv4\venv\lib\site-packages\twisted\internet\base.py", line 1282, in run
+    self.startRunning(installSignalHandlers=installSignalHandlers)
+  File "c:\users\haowenhao\desktop\biyesheji\bsv4\venv\lib\site-packages\twisted\internet\base.py", line 1262, in startRunning
+    ReactorBase.startRunning(self)
+  File "c:\users\haowenhao\desktop\biyesheji\bsv4\venv\lib\site-packages\twisted\internet\base.py", line 765, in startRunning
+    raise error.ReactorNotRestartable()
+twisted.internet.error.ReactorNotRestartable
+2020-03-18 21:44:12 [scrapy.crawler] INFO: Received SIGINT, shutting down gracefully. Send again to force 
+2020-03-18 21:44:12 [scrapy.crawler] INFO: Received SIGINT twice, forcing unclean shutdown
