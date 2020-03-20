@@ -65,6 +65,7 @@ tmp = {
                 "config": {
                     "name": "kuaidaili",
                     "url": "https://www.kuaidaili.com/free/inha/{}/",
+                    "useRange": True,
                     "header": {
                         "Host": "www.kuaidaili.com",
                         "Upgrade-Insecure-Requests": "1",

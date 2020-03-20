@@ -30,109 +30,44 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for spiderTask in spiderTasks %}......
+                    {% for spiderTask in spiderTasks %}
                         <tr class="tr-shadow">
 
-                        <td>{{ spiderTask.name }}</td>
-                        <td>
-                            <span class="block-email">{{ spiderTask.url }}</span>
-                        </td>
-                        <td class="desc">{{ spiderTask.description }}</td>
-                        <td>{{ spiderTask.recentTime }}</td>
-                        <td>
-                            <span class="status--process">Processed</span>
-                        </td>
+                            <td>{{ spiderTask.name }}</td>
+                            <td>
+                                <span class="block-email">{{ spiderTask.url }}</span>
+                            </td>
+                            <td class="desc">{{ spiderTask.description }}</td>
+                            <td>{{ spiderTask.recentTime }}</td>
+                            <td>
+                                <span class="status--process">Processed</span>
+                            </td>
 
-                        <td>
-                            <div class="table-data-feature">
-                                <button class="item" data-toggle="tooltip" data-placement="top" title=""
-                                        data-original-title="Send">
-                                    <i class="zmdi zmdi-mail-send"></i>
-                                </button>
-                                <button class="item" data-toggle="tooltip" data-placement="top" title=""
-                                        data-original-title="Edit">
-                                    <i class="zmdi zmdi-edit"></i>
-                                </button>
-                                <button class="item" data-toggle="tooltip" data-placement="top" title=""
-                                        data-original-title="Delete">
-                                    <i class="zmdi zmdi-delete"></i>
-                                </button>
-                                <button class="item" data-toggle="tooltip" data-placement="top" title=""
-                                        data-original-title="More">
-                                    <i class="zmdi zmdi-more"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="spacer"></tr>
+                            <td>
+                                <div class="table-data-feature">
+                                    <button id="runConfirm" name="{{ spiderTask.name }}"
+                                            value="{{ spiderTask.spiderName }}" class="item"
+                                            data-toggle="tooltip" data-placement="top" title=""
+                                            data-original-title="Send">
+                                        <i class="zmdi zmdi-mail-send"></i>
+                                    </button>
+                                    <button class="item" data-toggle="tooltip" data-placement="top" title=""
+                                            data-original-title="Edit">
+                                        <i class="zmdi zmdi-edit"></i>
+                                    </button>
+                                    <button class="item" data-toggle="tooltip" data-placement="top" title=""
+                                            data-original-title="Delete">
+                                        <i class="zmdi zmdi-delete"></i>
+                                    </button>
+                                    <button class="item" data-toggle="tooltip" data-placement="top" title=""
+                                            data-original-title="More">
+                                        <i class="zmdi zmdi-more"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="spacer"></tr>
                     {% endfor %}
-
-                    <tr class="tr-shadow">
-
-                        <td>Lori Lynch</td>
-                        <td>
-                            <span class="block-email">www.baidu.com</span>
-                        </td>
-                        <td class="desc">Samsung S8 Black</td>
-                        <td>2018-09-27 02:12</td>
-                        <td>
-                            <span class="status--process">Processed</span>
-                        </td>
-
-                        <td>
-                            <div class="table-data-feature">
-                                <button class="item" data-toggle="tooltip" data-placement="top" title=""
-                                        data-original-title="Send">
-                                    <i class="zmdi zmdi-mail-send"></i>
-                                </button>
-                                <button class="item" data-toggle="tooltip" data-placement="top" title=""
-                                        data-original-title="Edit">
-                                    <i class="zmdi zmdi-edit"></i>
-                                </button>
-                                <button class="item" data-toggle="tooltip" data-placement="top" title=""
-                                        data-original-title="Delete">
-                                    <i class="zmdi zmdi-delete"></i>
-                                </button>
-                                <button class="item" data-toggle="tooltip" data-placement="top" title=""
-                                        data-original-title="More">
-                                    <i class="zmdi zmdi-more"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="spacer"></tr>
-                    <tr class="tr-shadow">
-                        <td>Lori Lynch</td>
-                        <td>
-                            <span class="block-email">lyn@example.com</span>
-                        </td>
-                        <td class="desc">iPhone X 256Gb Black</td>
-                        <td>2018-09-25 19:03</td>
-                        <td>
-                            <span class="status--denied">Denied</span>
-                        </td>
-
-                        <td>
-                            <div class="table-data-feature">
-                                <button class="item" data-toggle="tooltip" data-placement="top" title=""
-                                        data-original-title="Send">
-                                    <i class="zmdi zmdi-mail-send"></i>
-                                </button>
-                                <button class="item" data-toggle="tooltip" data-placement="top" title=""
-                                        data-original-title="Edit">
-                                    <i class="zmdi zmdi-edit"></i>
-                                </button>
-                                <button class="item" data-toggle="tooltip" data-placement="top" title=""
-                                        data-original-title="Delete">
-                                    <i class="zmdi zmdi-delete"></i>
-                                </button>
-                                <button class="item" data-toggle="tooltip" data-placement="top" title=""
-                                        data-original-title="More">
-                                    <i class="zmdi zmdi-more"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
 
                     </tbody>
                 </table>
@@ -141,4 +76,88 @@
         </div>
     </div>
 
+
+    <div class="row m-t-30">
+        <div class="col-md-12">
+            <!-- DATA TABLE-->
+            <div class="table-responsive m-b-40">
+                <table class="table table-borderless table-data3">
+                    <thead>
+                    <tr>
+                        <th>任务名</th>
+                        <th>启动时间</th>
+                        <th>日志</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for task in taskList %}
+                    <tr>
+                        <td>{{ task.name }}</td>
+                        <td>{{ task.time }}</td>
+                        <td><a href="{% url 'proxy:getLog' log_file=task.fileName %}">{{ task.fileName }}</a></td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <!-- END DATA TABLE-->
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block mainContentDown %}
+    <div class="modal fade" id="confirModal" tabindex="-1" role="dialog" aria-labelledby="smallmodalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="smallmodalLabel">提示</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>
+
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+
+
+        $("#runConfirm").click(function () {
+            console.log(this.name, this.value);
+            $("#confirModal").modal("show");
+            $("#confirModal .modal-body p").html('你确定要启动爬虫 <font color="red">' + this.name + '</font>');
+            $("#confirModal .modal-footer .btn-primary").attr("onclick", 'runSpider("' + this.value + '")');
+            $("#confirModal .modal-footer .btn-primary").attr("value", this.value);
+
+        });
+
+        function runSpider(spider_name) {
+            console.log(spider_name);
+
+            $.post("{% url 'proxy:runSpider' %}",
+                {
+                    "spiderName": spider_name,
+                }, function (data, status, xhr) {
+                    console.log(data);
+                    console.log(status);
+                    console.log(xhr);
+                    {#location.reload();#}
+                });
+
+        }
+    </script>
 {% endblock %}

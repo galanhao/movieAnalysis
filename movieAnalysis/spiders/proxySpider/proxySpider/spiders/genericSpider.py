@@ -24,8 +24,12 @@ class GenericSpider(scrapy.Spider):
             # print(SIL)
             start_index = int(kwargs.get("si", "1"))
             end_index = int(kwargs.get("ei", "5"))
-            url_format = SIL[SNL.index(child_name)]["url"]
-            self.start_urls = [url_format.format(x) for x in range(start_index, end_index)]
+
+            if SIL[SNL.index(child_name)].get("useRange", False):
+                url_format = SIL[SNL.index(child_name)]["url"]
+                self.start_urls = [url_format.format(x) for x in range(start_index, end_index)]
+            else:
+                self.start_urls = SIL[SNL.index(child_name)]["url"]
             self.INFO = SIL[SNL.index(child_name)]
             super().__init__(name=self.name+""+child_name, **kwargs)
             # print(self.start_urls)

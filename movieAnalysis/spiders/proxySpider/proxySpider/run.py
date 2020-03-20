@@ -49,5 +49,6 @@ def clearProxy():
 
 # runner = CrawlerRunner(get_project_settings())
 # runner.crawl(VerifySpider())
-os.system("scrapy crawl verify")
+# os.system("scrapy crawl verify")
+os.system("scrapy crawl genericSpider -a cn=kuaidaili")
 

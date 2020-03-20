@@ -9,20 +9,20 @@ from proxyManager.models import Proxy
 
 class ProxyPipeline(object):
     def process_item(self, item, spider):
-        print(item)
+        spider.logger.info("进入pipeline", item)
         flag = item.get("flag", False)
         if flag == "crawl":
             try:
                 item.save()
             except BaseException as e:
-                print(e)
+                spider.logger.info(e)
                 pass
             return item
         else:
             tmp = dict(item)
             del tmp["flag"]
-            print("pipeline tmp", tmp)
+            spider.logger.info("pipeline tmp", tmp)
             proxy=Proxy.objects.filter(ip=item["ip"], port=item["port"])
             proxy.update(**tmp)
-            print(proxy.first())
+            spider.logger.info(proxy.first())
 
