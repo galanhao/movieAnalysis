@@ -1,3 +1,4 @@
+import json
 import random
 
 from DB.mongdbCli import MongoDBCli
@@ -5,10 +6,11 @@ from proxySpider.confs.paramConf import BASE_HEADERS, USER_AGENTS
 
 DEFAULT_HEADER = BASE_HEADERS
 
-SPIDER_INFO_LIST = [
+SPIDER_INFO_LIST1 = [
     {
         "name": "xici",
         "url": "https://www.xicidaili.com/nn/{}",
+        "useRange": True,
         "header": {
             "Host": "www.xicidaili.com",
             "Upgrade-Insecure-Requests": "1",
@@ -23,6 +25,7 @@ SPIDER_INFO_LIST = [
     {
         "name": "kuaidaili",
         "url": "https://www.kuaidaili.com/free/inha/{}/",
+        "useRange": True,
         "header": {
             "Host": "www.kuaidaili.com",
             "Upgrade-Insecure-Requests": "1",
@@ -37,6 +40,7 @@ SPIDER_INFO_LIST = [
     {
         "name": "7yip",
         "url": "https://www.7yip.cn/free/?action=china&page={}",
+        "useRange": True,
         "header": {
             "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
             "accept-encoding": "gzip, deflate, br",
@@ -55,6 +59,7 @@ SPIDER_INFO_LIST = [
     {
         "name": "jiangxianli",
         "url": "https://ip.jiangxianli.com/?page={}",
+        "useRange": True,
         "header": {
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
             "Accept-Encoding": "gzip, deflate, br",
@@ -65,7 +70,6 @@ SPIDER_INFO_LIST = [
             "Pragma": "no-cache",
             "Referer": "https://ip.jiangxianli.com/?page=1",
             "Upgrade-Insecure-Requests": "1",
-            "User-Agent": random.choice(USER_AGENTS),
         },
         "oneLine": ["//tbody/tr", ],
         "ip": "td[1]/text()",
@@ -75,9 +79,13 @@ SPIDER_INFO_LIST = [
 ]
 db = MongoDBCli()
 SPIDER_INFO_LIST = []
-SPIDER_INFO_LIST .extend(db.getProxySpiderConfig())
-
+SPIDER_INFO_LIST.extend(db.getAllSpiderConfig())
 
 SPIDER_NAME_LIST = [
     x["name"] for x in SPIDER_INFO_LIST
 ]
+
+if __name__ == "__main__":
+    print(SPIDER_NAME_LIST)
+    print(SPIDER_INFO_LIST)
+    print(json.dumps(SPIDER_INFO_LIST1[2]))

@@ -9,7 +9,7 @@ from proxyManager.models import Proxy
 
 class ProxyPipeline(object):
     def process_item(self, item, spider):
-        spider.logger.info("进入pipeline", item)
+        spider.logger.info("进入pipeline {}".format(item))
         flag = item.get("flag", False)
         if flag == "crawl":
             try:
@@ -21,7 +21,7 @@ class ProxyPipeline(object):
         else:
             tmp = dict(item)
             del tmp["flag"]
-            spider.logger.info("pipeline tmp", tmp)
+            spider.logger.info("pipeline tmp {}".format(tmp))
             proxy=Proxy.objects.filter(ip=item["ip"], port=item["port"])
             proxy.update(**tmp)
             spider.logger.info(proxy.first())

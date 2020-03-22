@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block mainContent %}
+    <a class="btn btn-outline-primary" href="{% url 'proxy:proxyList' %}" role="button">返回列表</a><hr>
+    <div class="row">
+        <div class="col-lg-9">
+            <div class="card">
+                <div class="card-header">
+                    <strong>爬虫配置</strong>
+                </div>
+                <div class="card-body card-block">
+                    <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                        <div class="row form-group">
+                            <div class="col col-md-3">
+                                <label for="text-input" class=" form-control-label">名称</label>
+                            </div>
+                            <div class="col-12 col-md-9">
+                                <input type="text" id="spider-name" name="name" placeholder="名称"
+                                       class="form-control">
+                                <small class="form-text text-muted">汉字的 如: 快代理</small>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col col-md-3">
+                                <label for="text" class=" form-control-label">描述</label>
+                            </div>
+                            <div class="col-12 col-md-9">
+                                <input type="text" name="spider_description"
+                                       placeholder="描述" class="form-control">
+                                <small class="help-block form-text">对爬虫简单描述</small>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col col-md-3">
+                                <label for="email-input" class=" form-control-label">开始页数</label>
+                            </div>
+                            <div class="col-12 col-md-9">
+                                <input type="number" name="start_index"
+                                       placeholder="开始页数" class="form-control">
+                                <small class="help-block form-text">起始页数 <span style="color: red;">(如果使用range)</span>
+                                </small>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col col-md-3">
+                                <label for="number" class=" form-control-label">结束页数</label>
+                            </div>
+                            <div class="col-12 col-md-9">
+                                <input type="number" name="end_index"
+                                       placeholder="结束页数" class="form-control">
+                                <small class="help-block form-text">结束页数 <span style="color: red;">(如果使用range)</span>
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col col-md-3">
+                                <label for="textarea-input" class=" form-control-label">config</label>
+                            </div>
+                            <div class="col-12 col-md-9">
+                                <textarea name="spider_config" spellcheck="false" rows="9"
+                                          placeholder="填写spider的config配置"
+                                          class="form-control"></textarea>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary btn-sm" onclick="checkInfo()">
+                        <i class="fa fa-dot-circle-o"></i> 提交
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+{% block mainContentDown %}
+    <div class="modal fade" id="json_info_display" tabindex="-1" role="dialog" aria-labelledby="scrollmodalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="scrollmodalLabel">信息确认</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <pre></pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="submitInfo()">确认提交</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">退出</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block scripts %}
+    <script>
+        var submit_info = null;
+
+        function perttyDisplay() {
+            row_json_str = $("[name='spider_config']").val();
+            console.log(row_json_str);
+            var json_str = JSON.stringify(JSON.parse(row_json_str), undefined, 4);
+            console.log(json_str);
+            $("[name='spider_config']").val(json_str);
+            $("[name='spider_config']").attr("placeholder", json_str);
+        }
+
+        $("[name='spider_config']").val(JSON.stringify({{ spider_config_json|safe }}));
+        perttyDisplay();
+
+        function checkInfo() {
+            try {
+                var name = $("[name='name']").val();
+                //var spider_name = $("[name='spider_name']").val();
+                var description = $("[name='spider_description']").val();
+                var start_index = parseInt($("[name='start_index']").val());
+                var end_index = parseInt($("[name='end_index']").val());
+                var spider_config = JSON.parse($("[name='spider_config']").val());
+                var info = {
+                    "name": name,
+                    //"spider_name": spider_name,
+                    "description": description,
+                    "startIndex": start_index,
+                    "endIndex": end_index,
+                    "config": spider_config
+                };
+                info_str = JSON.stringify(info, undefined, 4);
+                console.log(name, start_index, end_index, spider_config);
+                submit_info = info;
+                $("#json_info_display .modal-body pre").text(info_str);
+                console.log(info_str);
+                $("#json_info_display").modal("show");
+            } catch (e) {
+                console.log(e);
+                alert(e);
+            }
+        }
+
+        function submitInfo() {
+            if (submit_info != null) {
+                send_data = JSON.stringify(submit_info);
+                $.post(location.href,
+                    send_data,
+                    function (data) {
+                        console.log(data);
+                        if (!data["flag"]) {
+                            alert(data["massage"]);
+                        } else {
+                            location.href="/proxy/config/edit/"+submit_info["config"]["name"];
+                        }
+                    })
+            } else {
+                alert("请先确认信息");
+            }
+        }
+    </script>
+{% endblock %}

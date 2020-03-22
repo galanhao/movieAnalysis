@@ -37,23 +37,23 @@ HTTP_TEST_LIST = [
         },
         "callbalk": responseTest_default,
     },
-    {
-        "url": "http://site.baidu.com/",
-        "header": {
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-            "Accept-Encoding": "gzip, deflate",
-            "Accept-Language": "zh-CN,zh;q=0.9",
-            "Cache-Control": "no-cache",
-            "Connection": "keep-alive",
-            # "Cookie": "BAIDUID=1F0227587C7DE38C985A29282BA65D3C:FG=1; BIDUPSID=1F0227587C7DE38C985A29282BA65D3C; PSTM=1555164181; BDUSS=dOTDNyMENROURBSEY2UUFWUzFVZzJ1SC1ZM3V6MS1lSndkNDR-VEt0b0dqbU5lRVFBQUFBJCQAAAAAAAAAAAEAAADr11OO2aTAtsvC1tDSucz90-oAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYBPF4GATxeUz; BDORZ=B490B5EBF6F3CD402E515D22BCDA1598; BDRCVFR[feWj1Vr5u3D]=I67x6TjHwwYf0; delPer=0; PSINO=3; BDRCVFR[fb3VbsUruOn]=mk3SLVN4HKm; H_PS_PSSID=30971_1442_31123_21078_30901_30824_31085_22160; BDRCVFR[fBLL8ZbbiMm]=ddONZc2bo5mfAF9pywdpAqVuNqsus; __guid=177018279.2475572309495775000.1584594462077.4543; monitor_count=1",
-            "Host": "site.baidu.com",
-            "Pragma": "no-cache",
-            "Referer": "https://www.baidu.com/link?url=3u6R-ggwSgPjdZ7sLKdVV5EKAY4sL8w5yJ06jeqqtQe&wd=&eqid=c5778c3e0000baf3000000055e72fe0c",
-            "Upgrade-Insecure-Requests": "1",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36",
-        },
-        "callbalk": responseTest_default,
-    },
+    # {
+    #     "url": "http://site.baidu.com/",
+    #     "header": {
+    #         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+    #         "Accept-Encoding": "gzip, deflate",
+    #         "Accept-Language": "zh-CN,zh;q=0.9",
+    #         "Cache-Control": "no-cache",
+    #         "Connection": "keep-alive",
+    #         # "Cookie": "BAIDUID=1F0227587C7DE38C985A29282BA65D3C:FG=1; BIDUPSID=1F0227587C7DE38C985A29282BA65D3C; PSTM=1555164181; BDUSS=dOTDNyMENROURBSEY2UUFWUzFVZzJ1SC1ZM3V6MS1lSndkNDR-VEt0b0dqbU5lRVFBQUFBJCQAAAAAAAAAAAEAAADr11OO2aTAtsvC1tDSucz90-oAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYBPF4GATxeUz; BDORZ=B490B5EBF6F3CD402E515D22BCDA1598; BDRCVFR[feWj1Vr5u3D]=I67x6TjHwwYf0; delPer=0; PSINO=3; BDRCVFR[fb3VbsUruOn]=mk3SLVN4HKm; H_PS_PSSID=30971_1442_31123_21078_30901_30824_31085_22160; BDRCVFR[fBLL8ZbbiMm]=ddONZc2bo5mfAF9pywdpAqVuNqsus; __guid=177018279.2475572309495775000.1584594462077.4543; monitor_count=1",
+    #         "Host": "site.baidu.com",
+    #         "Pragma": "no-cache",
+    #         "Referer": "https://www.baidu.com/link?url=3u6R-ggwSgPjdZ7sLKdVV5EKAY4sL8w5yJ06jeqqtQe&wd=&eqid=c5778c3e0000baf3000000055e72fe0c",
+    #         "Upgrade-Insecure-Requests": "1",
+    #         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36",
+    #     },
+    #     "callbalk": responseTest_default,
+    # },
 ]
 HTTPS_TEST_LIST = [
     {

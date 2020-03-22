@@ -9,7 +9,7 @@ django-celery
 
 C:\Users\haowenhao\Desktop\biyesheji\BSv4\venv\Scripts\activate
 cd  C:\Users\haowenhao\Desktop\biyesheji\BSv4\movieAnalysis
-
+celery -A movieAnalysis worker -l info -P eventlet
 
 
 

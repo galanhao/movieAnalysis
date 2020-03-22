@@ -9,11 +9,18 @@
             <h3 class="title-5 m-b-35">代理爬虫列表</h3>
             <div class="table-data__tool">
                 <div class="table-data__tool-left">
+                    <button type="button" class="au-btn au-btn-icon au-btn--blue au-btn--small"
+                            onclick="confirmVerifyIP()">验证代理
+                    </button>
+                    <button type="button" class="au-btn au-btn-icon au-btn--blue2 au-btn--small"
+                            onclick="confirmClearIP()">清理无用代理
+                    </button>
                 </div>
                 <div class="table-data__tool-right">
-                    <button class="au-btn au-btn-icon au-btn--green au-btn--small">
-                        <i class="zmdi zmdi-plus"></i>add item
-                    </button>
+                    <a class="au-btn au-btn-icon au-btn--green au-btn--small" href="{% url 'proxy:newSpiderConfig' %}">
+                        <i class="zmdi zmdi-plus"></i>添加爬虫
+                    </a>&nbsp;&nbsp;&nbsp;
+
                 </div>
             </div>
             <div class="table-responsive table-responsive-data2">
@@ -25,7 +32,7 @@
                         <th>目标网址</th>
                         <th>描述</th>
                         <th>最近启动</th>
-                        <th>状态</th>
+                        <th>range</th>
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -35,30 +42,32 @@
 
                             <td>{{ spiderTask.name }}</td>
                             <td>
-                                <span class="block-email">{{ spiderTask.url }}</span>
+                                <a class="block-email" target="_blank" href="{{ spiderTask.url }}" >{{ spiderTask.url|truncatechars:25 }}</a>
                             </td>
-                            <td class="desc">{{ spiderTask.description }}</td>
+                            <td class="desc">{{ spiderTask.description|truncatechars:19 }}</td>
                             <td>{{ spiderTask.recentTime }}</td>
                             <td>
-                                <span class="status--process">Processed</span>
+                                {% if spiderTask.useRange %}
+                                    <span class="status--process">{{ spiderTask.startIndex }}-{{ spiderTask.endIndex }}</span>
+                                {% else %}
+                                    <span class="status--denied">不支持range</span>
+                                {% endif %}
                             </td>
 
                             <td>
                                 <div class="table-data-feature">
-                                    <button id="runConfirm" name="{{ spiderTask.name }}"
+                                    <button id="run_confirm" name="{{ spiderTask.name }}"
                                             value="{{ spiderTask.spiderName }}" class="item"
                                             data-toggle="tooltip" data-placement="top" title=""
                                             data-original-title="Send">
                                         <i class="zmdi zmdi-mail-send"></i>
                                     </button>
-                                    <button class="item" data-toggle="tooltip" data-placement="top" title=""
-                                            data-original-title="Edit">
+                                    <a class="item" data-toggle="tooltip"
+                                       href="{% url 'proxy:editSpiderConfig' spider_name=spiderTask.spiderName %}"
+                                       data-placement="top" title=""
+                                       data-original-title="Edit">
                                         <i class="zmdi zmdi-edit"></i>
-                                    </button>
-                                    <button class="item" data-toggle="tooltip" data-placement="top" title=""
-                                            data-original-title="Delete">
-                                        <i class="zmdi zmdi-delete"></i>
-                                    </button>
+                                    </a>
                                     <button class="item" data-toggle="tooltip" data-placement="top" title=""
                                             data-original-title="More">
                                         <i class="zmdi zmdi-more"></i>
@@ -92,11 +101,11 @@
                     <tbody>
 
                     {% for task in taskList %}
-                    <tr>
-                        <td>{{ task.name }}</td>
-                        <td>{{ task.time }}</td>
-                        <td><a href="{% url 'proxy:getLog' log_file=task.fileName %}">{{ task.fileName }}</a></td>
-                    </tr>
+                        <tr>
+                            <td>{{ task.name }}</td>
+                            <td>{{ task.time }}</td>
+                            <td><a href="{% url 'proxy:getLog' log_file=task.fileName %}">{{ task.fileName }}</a></td>
+                        </tr>
                     {% endfor %}
                     </tbody>
                 </table>
@@ -136,14 +145,15 @@
     <script>
 
 
-        $("#runConfirm").click(function () {
+        function checkConfirm() {
             console.log(this.name, this.value);
             $("#confirModal").modal("show");
             $("#confirModal .modal-body p").html('你确定要启动爬虫 <font color="red">' + this.name + '</font>');
             $("#confirModal .modal-footer .btn-primary").attr("onclick", 'runSpider("' + this.value + '")');
             $("#confirModal .modal-footer .btn-primary").attr("value", this.value);
+        }
 
-        });
+        $("[id='run_confirm']").click(checkConfirm);
 
         function runSpider(spider_name) {
             console.log(spider_name);
@@ -155,9 +165,67 @@
                     console.log(data);
                     console.log(status);
                     console.log(xhr);
-                    {#location.reload();#}
+                    location.reload();
                 });
-
         }
+
+        function confirmVerifyIP() {
+            $("#confirModal").modal("show");
+            $("#confirModal .modal-body p").html('你确定要开始验证 <font color="red">所有IP</font>');
+            $("#confirModal .modal-footer .btn-primary").attr("onclick", 'runVerifyIP()');
+        }
+
+        function runVerifyIP() {
+            $("#confirModal").modal("hide");
+            $.post("{% url 'proxy:runVerifyIP' %}", function (data, status, xhr) {
+                console.log("验证IP启动成功");
+
+                if (data["flag"]) {
+                    alert(data["massage"]);
+                    location.reload();
+                } else alert(data["massage"])
+            })
+        }
+
+        function confirmClearIP() {
+            $.get("{% url 'proxy:clearIP' %}", function (data) {
+                $("#confirModal").modal("show");
+                content = "";
+                dis_content = "";
+                hid_content = "";
+                console.log(data);
+                var tittle = '你确定要清理以下 <font color="red">所有IP</font><hr>';
+                for(var c in data["data"]){
+                    tmp = '<font color="#FF6666">'+data["data"][c]["ip"]+":"+data["data"][c]["port"]+"</font><br>";
+                    if (c<5){
+                        dis_content+=tmp;
+                    }else {
+                        hid_content += tmp;
+                    }
+                }
+                // 如果没有隐藏内容
+                if (hid_content!=""){
+                    tittle = '你确定要清理以下 <font color="red">所有IP</font> &nbsp;<button data-toggle="collapse" ' +
+                        'data-target="#clearipmore">点击展开更多</button><hr>';
+                    content = `
+                    ${dis_content}
+                    <div id="clearipmore" class="collapse in">
+                        ${hid_content}
+                    </div>
+                    `;
+                }else content = dis_content;
+                $("#confirModal .modal-body p").html(tittle+content);
+                $("#confirModal .modal-footer .btn-primary").attr("onclick", 'runClearIP()');
+            })
+        }
+
+    function runClearIP() {
+        $("#confirModal").modal("hide");
+        $.post("{% url 'proxy:clearIP' %}", function (data) {
+            if(data["flag"]){
+                alert(data["massage"])
+            }else alert("失败")
+        })
+    }
     </script>
 {% endblock %}
