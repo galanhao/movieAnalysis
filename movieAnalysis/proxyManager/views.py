@@ -29,10 +29,6 @@ def index(request):
     return HttpResponse("index")
 
 
-def verifyIP(request):
-    lf = "s.log"
-    result = task_verifyIP.delay(lf)
-    return HttpResponse(result)
 
 
 def proxyList(request):
@@ -193,6 +189,7 @@ class ClearIP(View):
         return JsonResponse(ret)
 
     def post(self, request):
+        print("开始调用")
         result = clearIP.delay(getRandomLogFileName("clearIP"))
         print(result)
         return JsonResponse({
@@ -205,10 +202,15 @@ class ClearIP(View):
 
 @csrf_exempt
 def runVerifyIP(request):
+    print("sss")
+    logger.info("得到请求runVerifyIP")
     result = None
     try:
-        result = task_verifyIP.delay(getRandomLogFileName("verifyIP"))
+        lf = getRandomLogFileName("verifyIP")
+        print("开始调用", lf)
+        result = task_verifyIP.delay(lf)
     except BaseException as e:
+        print(e)
         logger.error(e)
     if result == None:
         return JsonResponse({
@@ -231,7 +233,6 @@ def runSpider(request):
     spider_config = db.getOneSpiderFromSpiderName(spider_name)
     if spider_config == None:
         return HttpResponse("没有这个爬虫")
-    result = "a"
     result = task_runSpider.delay(
         spider_config["config"]["name"],
         getRandomLogFileName(spider_config["config"]["name"]),

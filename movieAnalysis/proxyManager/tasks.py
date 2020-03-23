@@ -56,6 +56,7 @@ def clearIP(log_file=None):
 
 @shared_task
 def task_verifyIP(log_file=None):
+    print("task_verifyIP 接收到的值", log_file)
     if log_file==None:
         log_file = getRandomLogFileName("verifyIP-beat")
     os.chdir(PROXY_SPIDER_DIR)

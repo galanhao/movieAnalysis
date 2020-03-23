@@ -16,7 +16,9 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import time
 
-import djcelery
+# import djcelery
+
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROXY_SPIDER_DIR = os.path.join(BASE_DIR, "spiders\\proxySpider\\proxySpider")
@@ -120,37 +122,7 @@ CACHES = {  # defcache
 
 
 
-CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler' # 定时任务
-djcelery.setup_loader()
-# CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
-CELERY_BROKER_URL = 'redis://:1690036618@127.0.0.1:6379/1'
-# CELERY_RESULT_BACKEND = 'redis://:1690036618@127.0.0.1:6379/1'
-CELERY_RESULT_BACKEND = 'django-db'
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TASK_SERIALIZER = 'json'
-
-CELERYD_LOG_FILE = os.path.join(BASE_DIR, "logs", "celery_work.log")
-CELERYBEAT_LOG_FILE = os.path.join(BASE_DIR, "logs", "celery_beat.log")
-
-CELERY_TIMEZONE = 'Asia/Shanghai'
-
-# CELERY_IMPORTS = (
-#     'proxyManager.tasks.testWriteFile',
-# )
-
-
-# from datetime import timedelta
-
-# 定时任务
-# CELERYBEAT_SCHEDULE = {
-#     'add-every-30-seconds': {
-#         'task': 'proxyManager.tasks.testWriteFile',  # 任务名
-#         'schedule': timedelta(seconds=6),  # 每2s执行一次该任务
-#         'args': ()
-#     }
-# }
-
+from movieAnalysis.celery_config import *
 
 
 # Password validation
@@ -182,8 +154,8 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
-# USE_TZ = False
+# USE_TZ = True
+USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
