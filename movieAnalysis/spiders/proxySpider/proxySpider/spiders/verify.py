@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 import datetime
 import random
+import time
 
 import scrapy
 from django.db.models import Q
 from scrapy.http import HtmlResponse
 
 from proxyManager.models import Proxy
+from proxySpider.confs.paramConf import EXPERT_TIME
 from proxySpider.confs.testConf import HTTP_TEST_LIST, HTTPS_TEST_LIST, ANONYMITY_TEST_LIST, AREA_TEST_LIST
 
 from proxySpider.items import ProxyItem
@@ -30,7 +32,10 @@ class VerifySpider(scrapy.Spider):
         # proxys = Proxy.objects.values("ip", "port").filter(source="genericSpiderjiangxianli").filter(http=1)
         # proxys = Proxy.objects.values("ip", "port").filter(source="genericSpiderjiangxianli").filter(http=0).filter(https=0)
         # proxys = Proxy.objects.values("ip", "port").filter(source="IPPOOL").filter(area="0")[:30]
-        proxys = Proxy.objects.values("ip", "port").filter(Q(http=-1) | Q(https=-1))
+        proxys = Proxy.objects.values("ip", "port").filter(
+            Q(Q(http=-1)|Q(https=-1))|
+            Q(verify_time__lte=datetime.datetime.fromtimestamp(time.time()-EXPERT_TIME))
+        )
         # proxys = Proxy.objects.values("ip", "port").all()[:60]
         # proxys = []
         for proxy in proxys:

@@ -8,6 +8,7 @@ urlpatterns = [
 
     url('proxylist', views.proxyList, name="proxyList"),
     url('log/(?P<log_file>\S+)', views.getLog, name="getLog"),
+    url('iplist/', views.GetIPList.as_view(), name="getIPList"),
 
 
 

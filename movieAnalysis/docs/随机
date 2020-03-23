@@ -10,7 +10,7 @@ django-celery
 C:\Users\haowenhao\Desktop\biyesheji\BSv4\venv\Scripts\activate
 cd  C:\Users\haowenhao\Desktop\biyesheji\BSv4\movieAnalysis
 celery -A movieAnalysis worker -l info -P eventlet
-
+celery -A movieAnalysis beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler  #启动beta 调度器使用数据库
 
 
 [2020-02-08 17:57:43,810: INFO/MainProcess] Received task: spiderManager.tasks.add[613f0f81-2e7d-40b4-96c2-1014c0f18478]

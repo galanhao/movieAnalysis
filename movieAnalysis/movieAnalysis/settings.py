@@ -16,9 +16,10 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import time
 
+import djcelery
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROXY_SPIDER_DIR = os.path.join(BASE_DIR, "spiders\\proxySpider\\proxySpider")
-
 
 PROXY_SPIDER_LOG_DIR = os.path.join(BASE_DIR, "spiders\\proxySpider\\logs")
 
@@ -44,7 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_celery_results',
-    "djcelery",
+    "django_celery_beat",
+    # "djcelery",
     "movieManager",
     "proxyManager",
     "home",
@@ -93,6 +95,8 @@ DATABASES = {
         'PASSWORD': '1690036618',
         'HOST': '127.0.0.1',
         'PORT': '3306',
+        'TEST_CHARSET': 'utf8',
+        'TEST_COLLATION': 'utf8_general_ci',
         'OPTIONS': {'charset': 'utf8mb4'},
     }
 }
@@ -114,12 +118,40 @@ CACHES = {  # defcache
     }
 }
 
+
+
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler' # 定时任务
+djcelery.setup_loader()
+# CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
 CELERY_BROKER_URL = 'redis://:1690036618@127.0.0.1:6379/1'
 # CELERY_RESULT_BACKEND = 'redis://:1690036618@127.0.0.1:6379/1'
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
+
+CELERYD_LOG_FILE = os.path.join(BASE_DIR, "logs", "celery_work.log")
+CELERYBEAT_LOG_FILE = os.path.join(BASE_DIR, "logs", "celery_beat.log")
+
+CELERY_TIMEZONE = 'Asia/Shanghai'
+
+# CELERY_IMPORTS = (
+#     'proxyManager.tasks.testWriteFile',
+# )
+
+
+# from datetime import timedelta
+
+# 定时任务
+# CELERYBEAT_SCHEDULE = {
+#     'add-every-30-seconds': {
+#         'task': 'proxyManager.tasks.testWriteFile',  # 任务名
+#         'schedule': timedelta(seconds=6),  # 每2s执行一次该任务
+#         'args': ()
+#     }
+# }
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -150,8 +182,8 @@ USE_I18N = True
 
 USE_L10N = True
 
-# USE_TZ = True
-USE_TZ = False
+USE_TZ = True
+# USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
@@ -161,16 +193,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 
-
-
-
-
-
-
-
-
 ###################################################
- # 日志配置
+# 日志配置
 log_path = os.path.join(BASE_DIR, 'logs')
 if not os.path.exists(log_path): os.mkdir(log_path)  # 如果不存在这个logs文件夹，就自动创建一个
 # print(log_path)
@@ -254,8 +278,6 @@ LOGGING = {
         },
     }
 }
-
-
 
 logging.config.dictConfig(LOGGING)
 logger = logging.getLogger('log')

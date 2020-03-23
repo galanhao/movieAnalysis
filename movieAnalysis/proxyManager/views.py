@@ -5,6 +5,7 @@ import random
 import time
 from urllib.parse import urlparse
 
+from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 
@@ -15,9 +16,10 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 from DB.mongdbCli import MongoDBCli
-from movieAnalysis.settings import PROXY_SPIDER_LOG_DIR
+from movieAnalysis.settings import PROXY_SPIDER_LOG_DIR, logger
 from proxyManager.models import Proxy
 from proxyManager.tasks import task_verifyIP, task_runSpider, clearIP
+from proxyManager.utils import getLogInfoList, checkJson, getRandomLogFileName
 
 
 def index(request):
@@ -58,6 +60,8 @@ def proxyList(request):
     content["taskList"].sort(key=__sortBydatetime, reverse=True)
     return render(request, "proxy/proxyList.html", context=content)
 
+
+
 def getLog(request, log_file):
     print(log_file)
     if log_file in [x["fileName"] for x in getLogInfoList()]:
@@ -67,6 +71,46 @@ def getLog(request, log_file):
         # print(data)
         return HttpResponse(data, content_type="text/plain,charset=utf-8", charset="utf-8")
     return HttpResponse("not Found")
+
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class GetIPList(View):
+    page_size = 20
+    def get(self, request):
+        proxys = Proxy.objects.filter(Q(https=1)|Q(http=1))
+        m_count = proxys.count()
+
+
+        content = {
+            "m_count":m_count,
+            "page_size": self.page_size,
+        }
+        return render(request, "proxy/ipList.html", content)
+
+    def post(self, request):
+        pageIndex = -1
+        try:
+            pageIndex = int(request.POST.get("pageIndex", -1))-1
+        except BaseException as e:
+            logger.error(e)
+            pass
+        if pageIndex == -1:
+            return JsonResponse({
+                "flag": False,
+                "data": "哦豁"
+            })
+        proxys = Proxy.objects.values(
+            "id", "ip", "port", "http", "https", "anonymity",
+            "speed", "area", "verify_time", "source"
+        ).filter(Q(https=1) | Q(http=1)).order_by("speed")
+        start_index = pageIndex*self.page_size
+        return JsonResponse({
+            "flag":True,
+            "data": list(proxys[start_index: start_index+self.page_size])
+        })
+
+
 
 @method_decorator(csrf_exempt, name='dispatch')
 class EditSpiderConfig(View):
@@ -134,11 +178,7 @@ class NowSpiderConfig(View):
 
 
 
-def getRandomLogFileName(name=""):
-    time_str = time.strftime("%Y%m%d_%H%M%S")
-    random_str = "".join([str(random.randint(0, 9)) for x in range(6)])
-    ret = time_str+"_"+name+"_"+random_str+".log"
-    return ret
+
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -203,60 +243,13 @@ def runSpider(request):
     return HttpResponse(result)
     # return JsonResponse(spider_config)
 
-def getLogInfoList():
-    dlst = os.listdir(PROXY_SPIDER_LOG_DIR)
-    ret_list = []
-    for c in dlst:
-        if c.endswith(".log"):
-            title_tmp = c[:-4]
-            list_tmp  = title_tmp.split("_")
-            if len(list_tmp)==4:
-                try:
-                    ret_list.append({
-                        "time": datetime.datetime.fromtimestamp(time.mktime(time.strptime(list_tmp[0]+"_"+list_tmp[1],"%Y%m%d_%H%M%S"))),
-                        "name": list_tmp[2],
-                        "fileName": c}
-                    )
-                except BaseException as e:
-                    print(e)
-    return ret_list
 
 
-def checkJson(request):
-    receive_spider = json.loads(request.body)
-    # print(receive_spider)
-    if receive_spider.get("name", False) == False:
-        return False
-    if receive_spider.get("description", False) == False:
-        return False
-    if receive_spider.get("startIndex", False) == False:
-        return False
-    if receive_spider.get("endIndex", False) == False:
-        return False
-    if receive_spider["config"].get("name", False) == False:
-        return False
-    if receive_spider["config"].get("url", False) == False:
-        return False
-    if receive_spider["config"].get("header", False) == False:
-        return False
-    if receive_spider["config"].get("oneLine", False) == False:
-        return False
-    if receive_spider["config"].get("ip", False) == False:
-        return False
-    if receive_spider["config"].get("port", False) == False:
-        return False
-    if receive_spider["config"].get("useRange", False) == False:
-        return False
-    return receive_spider
+
+
 
 if __name__ == "__main__":
     print(getLogInfoList())
-    import logging
 
-    logger = logging.getLogger('log')
-
-    logger.info('请求成功！ res')
-
-    logger.error('请求出错：{}')
 
 

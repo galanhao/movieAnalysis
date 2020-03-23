@@ -29,7 +29,7 @@ class GenericSpider(scrapy.Spider):
                 url_format = SIL[SNL.index(child_name)]["url"]
                 self.logger.info("url_format:{}".format(url_format))
                 start_index = int(kwargs.get("si", "1"))
-                end_index = int(kwargs.get("ei", "1"))
+                end_index = int(kwargs.get("ei", str()))
                 self.logger.info("start_index: {}, end_index: {}".format(start_index, end_index))
                 self.start_urls = [url_format.format(x) for x in range(start_index, end_index)]
             else:

@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block mainContent %}
+
+    <div class="row">
+        <div class="table-responsive">
+            <table class="table table-striped table-sm">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>ip</th>
+                    <th>port</th>
+                    <th>HTTP</th>
+                    <th>HTTPS</th>
+                    <th>匿名性</th>
+                    <th>速度</th>
+                    <th>地区</th>
+                    <th>验证时间</th>
+                    <th>来源</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <hr>
+    <nav aria-label="Page navigation example" id="pager1"></nav>
+{% endblock %}
+
+
+
+{% block scripts %}
+    <script src="{% static '/bootstrap-pager/bootstrapPager.js' %}"></script>
+    <script>
+        getMovieList1(1);
+        var pager = new Pager({
+            totalCount:{{ m_count }}, 		//总条数为150
+            pageSize:{{ page_size }},    			//每页显示6条内容，默认10
+            buttonSize: 6,   		//显示6个按钮，默认10
+            pageParam: 'runJs',   		//页码的参数名为'p'，默认为'page'
+            className: 'pagination justify-content-center', //分页的样式
+            prevButton: '上一页',     //上一页按钮
+            nextButton: '下一页',     //下一页按钮
+            firstButton: '首页',      //第一页按钮
+            lastButton: '末页',       //最后一页按钮
+            clickTag: 'a href="#" ',
+            useJS: true,
+            pagerName: document.getElementById("pager1"),
+        });
+        pager.run();
+
+        function formatIPRet(data) {
+            PROTOCOL = [
+                [-1, '未验证'],
+                [0, '未知'],
+                [1, 'http'],
+                [2, 'https'],
+                [3, 'http + https']
+            ];
+            ANONYMITYS = [
+                [-1, '未验证'],
+                [0, '未知'],
+                [1, '高匿'],
+                [2, '普匿'],
+                [3, '透明']
+            ];
+            HTTP = [
+                [-1, '未验证'],
+                [0, '不支持'],
+                [1, '支持']
+            ];
+            var colors = ["#999966", "#CC3333", "#009966"];
+            var http_str = '<font color="'+colors[data.http + 1]+'">'+ HTTP[data.http + 1][1]+'</font>';
+            var https_str = '<font color="'+colors[data.https + 1]+'">'+ HTTP[data.https + 1][1]+'</font>';
+            var colors = ["#999966", "#999966", "#009966", "#339933", "#99CC00"];
+            var anonymity_str = '<font color="'+colors[data.anonymity + 1]+'">'+ANONYMITYS[data.anonymity + 1][1]+'</font>';
+            var colors = ["#339933", "#99CC33", "#CC3333",];
+            speed = null;
+            if (data.speed != null) {
+                speed = parseFloat(data.speed);
+                if (speed < 1)
+                    color = colors[0];
+                else if (speed < 3.6)
+                    color = colors[1];
+                else
+                    color = colors[2]
+            } else {
+                color = "";
+                speed = "-";
+            }
+            var speed_str = '<font color="'+color+'">'+speed+'</font>';
+
+            if(data.area==null){
+                data.area= "";
+            }
+
+            if(data.verify_time==undefined){
+                data.verify_time = "";
+            }else{
+                data.verify_time = data.verify_time.replace("T", " ").substring(0,19);
+            }
+
+            data.speed =speed_str;
+            data.http = http_str;
+            data.https = https_str;
+            data.anonymity = anonymity_str;
+            {#console.log(data);#}
+            return data;
+        }
+
+        function setIPTable(ips) {
+            for (var i in ips) {
+                var data = formatIPRet(ips[i]);
+                console.log(data);
+                console.log(data["ip"], data["speed"]);
+                var content = `
+                <tr>
+                    <td>${data["id"]}</td>
+                    <td>${data["ip"]}</td>
+                    <td>${data["port"]}</td>
+                    <td>${data["http"]}</td>
+                    <td>${data["https"]}</td>
+                    <td>${data["anonymity"]}</td>
+                    <td>${data["speed"]}</td>
+                    <td>${data["area"]}</td>
+                    <td>${data["verify_time"]}</td>
+                    <td>${data["source"]}</td>
+                </tr>
+                `;
+
+                $("tbody").append(content);
+
+            }
+        }
+
+        function runJs(num) {
+            console.log("runJs wai   " + num);
+            pager.pageIndex = num;
+            $.post(location.href, {
+                "pageIndex": num
+            }, function (data) {
+                if (data["flag"]) {
+                    setIPTable(data["data"]);
+                } else {
+                    alert(data["data"])
+                }
+            });
+            pager.run();
+        }
+
+        runJs(1);
+    </script>
+
+{% endblock %}
