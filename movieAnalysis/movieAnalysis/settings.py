@@ -94,7 +94,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'movieanalysis4',
         'USER': 'root',
-        'PASSWORD': '1690036618',
+        'PASSWORD': 'password',
         'HOST': '127.0.0.1',
         'PORT': '3306',
         'TEST_CHARSET': 'utf8',
@@ -106,14 +106,14 @@ DATABASES = {
 CACHES = {  # defcache
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://:1690036618@127.0.0.1:6379/1",
+        "LOCATION": "redis://:password@127.0.0.1:6379/1",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
     },
     "proxy": {  # proxycache
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://:1690036618@127.0.0.1:6379/2",
+        "LOCATION": "redis://:password@127.0.0.1:6379/2",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
