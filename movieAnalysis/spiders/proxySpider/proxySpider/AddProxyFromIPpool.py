@@ -11,7 +11,7 @@ from proxyManager.models import Proxy
 
 
 def get_proxy_https():
-    db = MySQLdb.connect("localhost", "root", "1690036618", "ippool", charset='utf8')
+    db = MySQLdb.connect("localhost", "root", "password", "ippool", charset='utf8')
     cursor = db.cursor()
     sql = 'select ip, port from proxys where protocol>0 and types<=2 and score>8 and speed<3.5;'
     cursor.execute(sql)
